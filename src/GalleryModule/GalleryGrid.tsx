@@ -116,7 +116,7 @@ const GalleryGrid: React.FC = () => {
         const query: string = 'Nature';
         const response = await client.photos.search({
           query,
-          per_page: 24,
+          per_page: 31,
           page: page
         });
         if ('photos' in response) {
