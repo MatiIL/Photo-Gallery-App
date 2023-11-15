@@ -4,8 +4,8 @@ import React, {
   EffectCallback,
   useMemo,
   useCallback,
-  MouseEvent,
 } from "react";
+import debounce from 'lodash/debounce';
 import { usePhotosContext, Image } from "../context/PhotosContext";
 import { Gallery } from "react-grid-gallery";
 import { createClient } from 'pexels';
@@ -28,15 +28,14 @@ const GalleryGrid: React.FC = () => {
       images: Image[], setImages: React.Dispatch<React.SetStateAction<Image[]>>
     } = usePhotosContext();
 
+  const slides: { src: string; width: number; height: number }[] = useMemo(() => {
+    return images.map(({ src, width, height }) => ({
+      src,
+      width,
+      height,
+    }));
+  }, [images]);
 
-    const slides: { src: string; width: number; height: number }[] = useMemo(() => {
-      return images.map(({ src, width, height }) => ({
-        src,
-        width,
-        height,
-      }));
-    }, [images]);
-    
   const MyIcon: React.FC = createIcon("MyIcon", <SvgComponent />);
 
   const MyButton = () => {
@@ -73,25 +72,45 @@ const GalleryGrid: React.FC = () => {
 
   const THRESHOLD: number = 100;
 
-  const handleScroll = useCallback((): void => {
+  // const handleScroll = useCallback((): void => {
+  //   const { innerHeight } = window;
+  //   const { scrollHeight } = document.documentElement;
+  //   const windowBottom: number = innerHeight + window.scrollY;
+
+  //   if (windowBottom >= scrollHeight - THRESHOLD) {
+  //     setDidUserScroll(true);
+  //     setPage((prevPage: number) => prevPage + 1);
+  //   } else {
+  //     setDidUserScroll(false);
+  //   }
+  // }, [setDidUserScroll, setPage, didUserScroll]);
+
+  // useEffect(() => {
+  //   window.addEventListener("scroll", handleScroll);
+  //   return () => {
+  //     window.removeEventListener("scroll", handleScroll);
+  //   };
+  // }, [handleScroll]);
+
+  const debouncedHandleScroll = debounce(() => {
     const { innerHeight } = window;
     const { scrollHeight } = document.documentElement;
     const windowBottom: number = innerHeight + window.scrollY;
-  
+
     if (windowBottom >= scrollHeight - THRESHOLD) {
       setDidUserScroll(true);
       setPage((prevPage: number) => prevPage + 1);
     } else {
       setDidUserScroll(false);
     }
-  }, [setDidUserScroll, setPage, didUserScroll]);
+  }, 10); // Adjust the delay as needed
 
   useEffect(() => {
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", debouncedHandleScroll);
     return () => {
-      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("scroll", debouncedHandleScroll);
     };
-  }, [handleScroll]);
+  }, [debouncedHandleScroll]);
 
   const handleSelect = useCallback((index: number) => {
     setImages((prevImages) => {
@@ -104,7 +123,7 @@ const GalleryGrid: React.FC = () => {
   const apiKey: string = (process.env.REACT_APP_PEXELS_KEY as string);
 
   useEffect(() => {
-    const getPhotos = async (): Promise<void>  => {
+    const getPhotos = async (signal: AbortSignal): Promise<void> => {
       try {
         const client = createClient(apiKey);
         const query: string = 'Nature';
@@ -138,7 +157,14 @@ const GalleryGrid: React.FC = () => {
       }
     };
 
-    getPhotos();
+    const controller = new AbortController();
+    const signal = controller.signal;
+
+    getPhotos(signal);
+
+    return () => {
+      controller.abort();
+    };
 
   }, [didUserScroll] as const);
 
