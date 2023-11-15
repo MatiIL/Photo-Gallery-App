@@ -142,8 +142,12 @@ const GalleryGrid: React.FC = () => {
 
   }, [didUserScroll] as const);
 
+  const handleContextMenu: React.MouseEventHandler<HTMLDivElement> = (event) => {
+    event.preventDefault();
+  };
+
   return (
-    <div>
+    <div onContextMenu={handleContextMenu}>
       <Gallery
         images={images}
         onClick={handlePhotoClick}
