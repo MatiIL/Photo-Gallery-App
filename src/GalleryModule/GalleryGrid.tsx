@@ -32,7 +32,6 @@ const GalleryGrid: React.FC = () => {
       images: Image[], setImages: React.Dispatch<React.SetStateAction<Image[]>>
     } = usePhotosContext();
   const [cachedData, setCachedData] = useState<CachedData>({});
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const apiKey: string = (process.env.REACT_APP_PEXELS_KEY as string);
 
   const slides: { src: string; width: number; height: number }[] = useMemo(() => {
@@ -110,7 +109,6 @@ const GalleryGrid: React.FC = () => {
   useEffect(() => {
     const getPhotos = async (signal: AbortSignal): Promise<void> => {
       try {
-        setIsLoading(true);
         if (cachedData[page]) {
           setImages((prevImages) => [...prevImages, ...cachedData[page]]);
           return;
@@ -145,8 +143,6 @@ const GalleryGrid: React.FC = () => {
         }
       } catch (error: any) {
         console.error('Error fetching photos:', error);
-      } finally {
-        setIsLoading(false);
       }
     };
 
@@ -167,10 +163,6 @@ const GalleryGrid: React.FC = () => {
 
   return (
     <div onContextMenu={handleContextMenu}>
-      {isLoading && (
-        <Placeholder as="div" animation="glow">
-        </Placeholder>
-      )}
       <Gallery
         images={images}
         onClick={handlePhotoClick}
