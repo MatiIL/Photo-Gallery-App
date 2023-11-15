@@ -17,7 +17,7 @@ You will also see any lint errors in the console.
 
 ### Project objectives
 
-uild a React web application that displays a gallery of photos in a responsive grid layout.
+Build a React web application that displays a gallery of photos in a responsive grid layout.
 The app should fetch photos from an API and present then in an aesthetically pleasing and user-friendly
 manner.
 Requirements:
