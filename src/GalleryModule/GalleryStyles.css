@@ -1,0 +1,11 @@
+.custom-overlay__photographer {
+    background-color: rgba(0, 0, 0, 0.8);
+    max-height: 240px;
+    overflow: hidden;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    color: white;
+    padding: 2px;
+    font-size: 90%;
+  }
