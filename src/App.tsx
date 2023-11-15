@@ -7,7 +7,7 @@ const App: React.FC = () => {
   return (
     <div className="App">
       <PhotosContextProvider>
-        <HeaderComponent fixed="top" />
+        <HeaderComponent  />
         <GalleryGrid />
       </PhotosContextProvider>
     </div>

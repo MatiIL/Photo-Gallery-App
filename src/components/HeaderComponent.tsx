@@ -12,11 +12,7 @@ import {
 } from 'react-bootstrap';
 import AddPhotoModal from './AddPhotoModal';
 
-interface NavBarProps {
-    fixed: string
-}
-
-const HeaderComponent: React.FC<NavBarProps> = ({ fixed }) => {
+const HeaderComponent: React.FC = () => {
     const {
         images,
         setImages,
@@ -53,7 +49,7 @@ const HeaderComponent: React.FC<NavBarProps> = ({ fixed }) => {
 
     return (
         <>
-            <Navbar expand="lg" className="bg-body-tertiary">
+            <Navbar expand="lg" className="bg-body-tertiary" fixed="top">
                 <Container>
                     <Navbar.Brand href="#home">
                         <div className="text-dark">
