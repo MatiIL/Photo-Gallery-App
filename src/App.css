@@ -1,3 +1,19 @@
 .App {
   text-align: center;
 }
+.bg-body-tertiary {
+  --bs-bg-opacity: 0.7;
+  font-family: "Montserrat", sans-serif;
+  font-size: smaller;
+}
+.app-name {
+  font-family: "Sevillana", cursive;
+  font-size: larger;
+}
+span.text-decoration-none {
+  font-size: x-small;
+}
+#basic-navbar-nav {
+  display: flex;
+  justify-content: end;
+}

@@ -2,7 +2,6 @@ import React,
 {
     useState,
     useEffect,
-    EffectCallback,
 } from 'react';
 import { usePhotosContext, PhotosContextValue } from '../context/PhotosContext';
 import {
@@ -52,13 +51,13 @@ const HeaderComponent: React.FC = () => {
             <Navbar expand="lg" className="bg-body-tertiary" fixed="top">
                 <Container>
                     <Navbar.Brand href="#home">
-                        <div className="text-dark">
-                            IZME Photos
+                        <div className="app-name text-dark">
+                            Infinity Gallery
                         </div>
                         <div>
                             <span
                                 onClick={() => window.location.href = "https://www.pexels.com"}
-                                className="text-decoration-none text-dark fs-6"
+                                className="text-decoration-none text-dark"
                             >
                                 Photos provided by Pexels
                             </span>
