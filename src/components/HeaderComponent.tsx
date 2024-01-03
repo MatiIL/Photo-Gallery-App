@@ -63,9 +63,7 @@ const HeaderComponent: React.FC = () => {
                             </span>
                         </div>
                     </Navbar.Brand>
-                    <Navbar.Toggle aria-controls="basic-navbar-nav" />
-                    <Navbar.Collapse id="basic-navbar-nav">
-                        <NavDropdown title="Edit" id="basic-nav-dropdown" className='w-25'>
+                        <NavDropdown title="Edit" id="basic-nav-dropdown" className='w-50'>
                             <NavDropdown.Item onClick={handleSelect}>
                                 {contextHasSelected ? 'Clear selection' : 'Select all'}
                             </NavDropdown.Item>
@@ -78,7 +76,6 @@ const HeaderComponent: React.FC = () => {
                                 Add photo
                             </NavDropdown.Item>
                         </NavDropdown>
-                    </Navbar.Collapse>
                 </Container>
             </Navbar>
             <AddPhotoModal show={show} setShow={setShow} />
