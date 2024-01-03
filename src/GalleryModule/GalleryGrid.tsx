@@ -1,7 +1,5 @@
 import React, {
   useState,
-  useEffect,
-  EffectCallback,
   useMemo,
   useCallback,
 } from "react";
@@ -15,9 +13,9 @@ import Lightbox, {
   useLightboxState,
   LightboxStateContextType,
 } from "yet-another-react-lightbox";
+import InfiniteScroll from 'react-infinite-scroller';
 import SvgComponent from '../../src/SvgComponent';
 import "yet-another-react-lightbox/styles.css";
-import { Placeholder } from "react-bootstrap";
 
 interface CachedData {
   [page: number]: Image[];
@@ -26,7 +24,6 @@ interface CachedData {
 const GalleryGrid: React.FC = () => {
   const [index, setIndex] = useState<number>(-1);
   const [page, setPage] = useState<number>(1);
-  const [didUserScroll, setDidUserScroll] = useState<boolean>(false);
   const { images, setImages }:
     {
       images: Image[], setImages: React.Dispatch<React.SetStateAction<Image[]>>
@@ -76,28 +73,6 @@ const GalleryGrid: React.FC = () => {
     setIndex(index);
   }
 
-  const THRESHOLD: number = 100;
-
-  const handleScroll = useCallback((): void => {
-    const { innerHeight } = window;
-    const { scrollHeight } = document.documentElement;
-    const windowBottom: number = innerHeight + window.scrollY;
-
-    if (windowBottom >= scrollHeight - THRESHOLD) {
-      setDidUserScroll(true);
-      setPage((prevPage: number) => prevPage + 1);
-    } else {
-      setDidUserScroll(false);
-    }
-  }, [setDidUserScroll, setPage, didUserScroll]);
-
-  useEffect(() => {
-    window.addEventListener("scroll", handleScroll);
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, [handleScroll]);
-
   const handleSelect = useCallback((index: number) => {
     setImages((prevImages) => {
       const updatedImages = [...prevImages];
@@ -106,8 +81,8 @@ const GalleryGrid: React.FC = () => {
     });
   }, [setImages]);
 
-  useEffect(() => {
-    const getPhotos = async (signal: AbortSignal): Promise<void> => {
+  const fetchPhotos = useCallback(
+    async (): Promise<void> => {
       try {
         if (cachedData[page]) {
           setImages((prevImages) => [...prevImages, ...cachedData[page]]);
@@ -144,18 +119,8 @@ const GalleryGrid: React.FC = () => {
       } catch (error: any) {
         console.error('Error fetching photos:', error);
       }
-    };
-
-    const controller = new AbortController();
-    const signal = controller.signal;
-
-    getPhotos(signal);
-
-    return () => {
-      controller.abort();
-    };
-
-  }, [didUserScroll] as const);
+    }, [page]
+  );
 
   const handleContextMenu: React.MouseEventHandler<HTMLDivElement> = (event) => {
     event.preventDefault();
@@ -163,21 +128,27 @@ const GalleryGrid: React.FC = () => {
 
   return (
     <div onContextMenu={handleContextMenu}>
-      <Gallery
-        images={images}
-        onClick={handlePhotoClick}
-        enableImageSelection={true}
-        onSelect={handleSelect}
-      />
-      <Lightbox
-        slides={slides}
-        open={index >= 0}
-        index={index}
-        close={() => setIndex(-1)}
-        toolbar={{
-          buttons: [<MyButton key="my-button" />, "close"],
-        }}
-      />
+      <InfiniteScroll
+        initialLoad={true}
+        loadMore={fetchPhotos}
+        hasMore={true}
+      >
+        <Gallery
+          images={images}
+          onClick={handlePhotoClick}
+          enableImageSelection={true}
+          onSelect={handleSelect}
+        />
+        <Lightbox
+          slides={slides}
+          open={index >= 0}
+          index={index}
+          close={() => setIndex(-1)}
+          toolbar={{
+            buttons: [<MyButton key="my-button" />, "close"],
+          }}
+        />
+      </InfiniteScroll>
     </div>
   );
 };

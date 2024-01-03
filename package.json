@@ -11,15 +11,16 @@
     "@types/react": "^18.0.0",
     "@types/react-dom": "^18.0.0",
     "dotenv": "^16.3.1",
-    "nanoid": "^5.0.3",
+    "nanoid": "^5.0.4",
     "pexels": "^1.4.0",
     "react": "^18.2.0",
     "react-bootstrap": "^2.9.1",
     "react-dom": "^18.2.0",
     "react-grid-gallery": "^1.0.1-alpha.0",
+    "react-infinite-scroller": "^1.2.6",
     "react-scripts": "5.0.1",
     "typescript": "^4.4.2",
-    "yet-another-react-lightbox": "^3.15.1"
+    "yet-another-react-lightbox": "^3.15.6"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -46,6 +47,7 @@
     ]
   },
   "devDependencies": {
-    "@types/lodash": "^4.14.201"
+    "@types/lodash": "^4.14.201",
+    "@types/react-infinite-scroller": "^1.2.5"
   }
 }
