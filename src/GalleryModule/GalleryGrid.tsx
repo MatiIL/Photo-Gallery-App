@@ -1,7 +1,6 @@
 import React, {
   useState,
   useMemo,
-  useCallback,
 } from "react";
 import { usePhotosContext, Image } from "../context/PhotosContext";
 import { Gallery } from "react-grid-gallery";
@@ -73,15 +72,15 @@ const GalleryGrid: React.FC = () => {
     setIndex(index);
   }
 
-  const handleSelect = useCallback((index: number) => {
+  const handleSelect = (index: number) => {
     setImages((prevImages) => {
       const updatedImages = [...prevImages];
       updatedImages[index].isSelected = !updatedImages[index].isSelected;
       return updatedImages;
     });
-  }, [setImages]);
+  }
 
-  const fetchPhotos = useCallback(
+  const fetchPhotos = 
     async (): Promise<void> => {
       try {
         if (cachedData[page]) {
@@ -119,8 +118,7 @@ const GalleryGrid: React.FC = () => {
       } catch (error: any) {
         console.error('Error fetching photos:', error);
       }
-    }, [page]
-  );
+    }
 
   const handleContextMenu: React.MouseEventHandler<HTMLDivElement> = (event) => {
     event.preventDefault();
